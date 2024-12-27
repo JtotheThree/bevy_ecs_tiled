@@ -27,17 +27,17 @@ pub mod properties;
 
 /// `bevy_ecs_tiled` public exports.
 pub mod prelude {
-    pub use crate::TiledMapHandle;
-    pub use crate::TiledWorldHandle;
-    pub use crate::TiledMapPlugin;
-    pub use crate::TiledMapPluginConfig;
-    pub use super::map::prelude::*;
-    pub use super::names::*;
-    pub use super::world::prelude::*;
     #[cfg(feature = "debug")]
     pub use super::debug::*;
+    pub use super::map::prelude::*;
+    pub use super::names::*;
     #[cfg(feature = "physics")]
     pub use super::physics::prelude::*;
+    pub use super::world::prelude::*;
+    pub use crate::TiledMapHandle;
+    pub use crate::TiledMapPlugin;
+    pub use crate::TiledMapPluginConfig;
+    pub use crate::TiledWorldHandle;
 }
 
 use crate::prelude::*;
@@ -114,7 +114,16 @@ impl Plugin for TiledMapPlugin {
             .insert_resource(cache::TiledResourceCache::new())
             .init_asset_loader::<TiledMapLoader>()
             .init_asset_loader::<TiledWorldLoader>()
-            .add_systems(Update, (map::handle_map_events, map::process_loaded_maps, world::handle_world_events, world::process_loaded_worlds, world::world_chunking))
+            .add_systems(
+                Update,
+                (
+                    map::handle_map_events,
+                    map::process_loaded_maps,
+                    world::handle_world_events,
+                    world::process_loaded_worlds,
+                    world::world_chunking,
+                ),
+            )
             .insert_resource(self.0.clone());
 
         #[cfg(feature = "user_properties")]
